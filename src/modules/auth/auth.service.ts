@@ -16,9 +16,11 @@ interface SigninCredentials{
     password: string;
 }
 
-const signup = async ({name, email, password, phone, role = 'customer'}: UserDetails) =>{
+const signup = async ({name, email, password, phone, role }: UserDetails) =>{
+
+    const finalRole = role ? role : "customer";
     const hashedPass = await bcrypt.hash(password, 10)
-    const userRegister = await pool.query(`INSERT INTO users(name, email, password, phone, role) VALUES ($1,$2,$3,$4,$5) RETURNING id, name, email, phone, role`, [name, email, hashedPass, phone, role])
+    const userRegister = await pool.query(`INSERT INTO users(name, email, password, phone, role) VALUES ($1,$2,$3,$4,$5) RETURNING id, name, email, phone, role`, [name, email, hashedPass, phone, finalRole])
     return userRegister
 }
 
